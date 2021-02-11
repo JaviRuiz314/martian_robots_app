@@ -1,0 +1,12 @@
+{
+    "name": "martian_robots_app",
+    "version": "1.0.0",
+    "license": "MIT",
+    "scripts": {
+        "start": "node src/index.js"
+    },
+    "dependencies": {
+        "dotenv": "8.2.0",
+        "express": "4.17.1"
+    }
+}
