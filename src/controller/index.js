@@ -1,7 +1,10 @@
 'use strict';
 
-const Robot = require('./robotController');
+const 
+    Robot = require('./robotController'),
+    ObjectTracker = require('./objectTracker');
 
 module.exports = {
-    Robot
+    Robot,
+    ObjectTracker
 }
