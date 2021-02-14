@@ -19,11 +19,14 @@ module.exports = function (sequelize, DataTypes) {
         },
         updateAt: {
             type: DataTypes.DATE,
-            field: 'updateat'
+            field: 'updatedat'
         },
         createdAt: {
             type: DataTypes.DATE,
             field: 'createdat'
         }
+    }, {
+        tableName: 'robot',
+        timestamps: false
     });
 }
