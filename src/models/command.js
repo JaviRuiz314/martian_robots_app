@@ -29,5 +29,7 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.DATE,
             field: 'createdat'
         }
+    }, {
+        tableName: 'command'
     });
 }

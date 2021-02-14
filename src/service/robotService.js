@@ -2,29 +2,28 @@
 
 const models = require('../models');
 class RobotService {
+
     constructor(name, inPosition) {
-        console.log(name);
-        console.log(inPosition);
-        return await this.createRobot(name, inPosition);
+        this.name = name,
+        this.inPosition = inPosition
     }
 
-    getRobotInfo() { }
-    async createRobot(name, inPosition) {
+    static async createRobot () {
         const newRobot = await models.Robot.create({
-            Name: name,
+            Name: this.name,
             Status: 'ACTIVE'
         });
-        newRobot.inPosition = inPosition;
+        newRobot.inPosition = this.inPosition;
         return newRobot;
     }
-    updateStatus(id, status) {
+    async updateStatus(id, status) {
         await models.Robot.update(
-          { Status: status},
-          {
-              where: {
-                  Id: id
-              }
-          }  
+            { Status: status },
+            {
+                where: {
+                    Id: id
+                }
+            }
         );
     }
 }
