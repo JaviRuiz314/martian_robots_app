@@ -3,12 +3,18 @@
     "version": "1.0.0",
     "license": "MIT",
     "scripts": {
-        "start": "node src/server/index.js"
+        "start": "node src/index.js",
+        "updatedatabase": "npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all"
     },
     "dependencies": {
-        "axios": "^0.21.1",
-        "body-parser": "^1.19.0",
+        "body-parser": "1.19.0",
         "dotenv": "8.2.0",
-        "express": "4.17.1"
+        "express": "4.17.1",
+        "pg": "8.5.1",
+        "pg-hstore": "2.3.3",
+        "sequelize": "6.5.0"
+    },
+    "devDependencies": {
+        "sequelize-cli": "^6.2.0"
     }
 }
