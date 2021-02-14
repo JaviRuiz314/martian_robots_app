@@ -5,6 +5,9 @@ const
     app = express.Router(),
     robotController = require('../controller/robotController');
 
-app.post('/getnewrobot', robotController.createNewRobot);
+app.post('/getnewrobot', async (req, res) => {
+    await robotController.createNewRobot(req, res);
+    res.redirect('/');
+});
 
 module.exports = app;
