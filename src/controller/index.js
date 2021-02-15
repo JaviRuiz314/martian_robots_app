@@ -2,9 +2,11 @@
 
 const 
     Robot = require('./robotController'),
-    ObjectTracker = require('./objectTracker');
+    ObjectTracker = require('./objectTracker'),
+    Command = require('./commadController');
 
 module.exports = {
     Robot,
-    ObjectTracker
+    ObjectTracker,
+    Command
 }
