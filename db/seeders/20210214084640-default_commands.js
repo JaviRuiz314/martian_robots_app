@@ -8,8 +8,8 @@ module.exports = {
 				+ '(name, movement_change, direction_change) '
 				+ 'VALUES '
 				+ '(\'F\', 1, 0), '
-				+ '(\'L\', 0, -90), '
-				+ '(\'R\', 0, +90)',
+				+ '(\'L\', 0, 90), '
+				+ '(\'R\', 0, -90)',
 				{ transaction }
 			);
       transaction.commit();
