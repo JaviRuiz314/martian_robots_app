@@ -44,11 +44,11 @@ async function receiveInstructions(req, res) {
 			availableCommadsMap = await commandController.getCommandNametoValuesMap(),
 			areInstructionsValid = (_verifyInitialPositionFormat(position) && _verifyCommandString(req.query.commandString));
 		if (areInstructionsValid) {
-			for (let command of req.query.commandString) {
-				[position, status] = objectTrackerService.executeCommand(availableCommadsMap[command], position);
+			for (const command of req.query.commandString) {
+				[position, status] = objectTrackerService.executeCommand(position, availableCommadsMap[command]);
 			}
 		}
-		res.status(200).send('Ok');
+		res.status(200).send([position, status]);
 	} catch (error) {
 		console.log('receiveInstruction: unexpected error: ' + error.toString());
 		res.status(503).send('Unexpected error');
