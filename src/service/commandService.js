@@ -3,7 +3,7 @@
 const models = require('../models');
 
 async function getSupportedCommands() {
-    return await models.Sequelize.findAll();
+    return await models.Command.findAll();
 }
 
 module.exports = {

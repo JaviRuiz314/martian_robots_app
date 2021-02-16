@@ -1,12 +1,14 @@
 'use strict';
 
 const 
-    Robot = require('./robotService'),
-    ObjectTracker = require('./objectTracker'),
-    Command = require('./commandService');
+	Robot = require('./robotService'),
+	ObjectTracker = require('./objectTrackerService'),
+	Command = require('./commandService'),
+	Movement = require('./movementService');
 
 module.exports = {
-    Robot,
-    ObjectTracker,
-    Command
+	Robot,
+	ObjectTracker,
+	Command,
+	Movement
 }

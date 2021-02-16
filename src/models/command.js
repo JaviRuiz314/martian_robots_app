@@ -23,13 +23,14 @@ module.exports = function (sequelize, DataTypes) {
         },
         updateAt: {
             type: DataTypes.DATE,
-            field: 'updateat'
+            field: 'updatedat'
         },
         createdAt: {
             type: DataTypes.DATE,
             field: 'createdat'
         }
     }, {
-        tableName: 'command'
+        tableName: 'command',
+        timestamps: false
     });
 }
