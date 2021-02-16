@@ -2,9 +2,11 @@
 
 const 
 	Robot = require('./robotRoutes'),
-	ObjectTracker = require('./objectTrackerRoutes');
+	ObjectTracker = require('./objectTrackerRoutes'),
+	MarsTerrain = require('./marsTerrainRoutes');
 
 module.exports = {
 	Robot,
-	ObjectTracker
+	ObjectTracker,
+	MarsTerrain
 }

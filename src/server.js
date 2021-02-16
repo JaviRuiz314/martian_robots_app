@@ -1,3 +1,5 @@
+const { route } = require('./routes/robotRoutes');
+
 const
 	express = require('express'),
 	app = express(),
@@ -16,5 +18,6 @@ app.use(bodyParser.json());
 
 app.use(routes.Robot);
 app.use(routes.ObjectTracker);
+app.use(routes.MarsTerrain);
 
 module.exports = app;
