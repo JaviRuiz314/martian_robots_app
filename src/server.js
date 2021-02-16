@@ -1,8 +1,8 @@
 const
-    express = require('express'),
-    app = express(),
-    path = require('path'),
-    routes = require('./routes'),
+	express = require('express'),
+	app = express(),
+	path = require('path'),
+	routes = require('./routes'),
 	bodyParser = require('body-parser');
 
 app.use(bodyParser.json({ limit: '2mb' }));

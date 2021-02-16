@@ -1,10 +1,10 @@
 'use strict';
 
 const 
-    Robot = require('./robotRoutes'),
-    ObjectTracker = require('./objectTrackerRoutes');
+	Robot = require('./robotRoutes'),
+	ObjectTracker = require('./objectTrackerRoutes');
 
 module.exports = {
-    Robot,
-    ObjectTracker
+	Robot,
+	ObjectTracker
 }
