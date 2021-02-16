@@ -4,7 +4,8 @@
     "license": "MIT",
     "scripts": {
         "start": "node src/index.js",
-        "updatedatabase": "npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all"
+        "updatedatabase:migrate": "npx sequelize-cli db:migrate",
+        "updatedatabase:seed": "npx sequelize-cli db:seed:all"
     },
     "dependencies": {
         "axios": "^0.21.1",
