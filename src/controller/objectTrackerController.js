@@ -2,6 +2,8 @@
 
 const
 	commandController = require('./commadController'),
+	marsTerrainService = require('../service/marsTerrainService'),
+	robotService = require('../service/robotService'),
 	objectTrackerService = require('../service/objectTrackerService'),
 	util = require('../shared/util')
 
@@ -43,11 +45,11 @@ async function receiveInstructions(req, res) {
 			status;
 		const
 			availableCommadsMap = await commandController.getCommandNametoValuesMap(),
+			latestMarsTerrain = await marsTerrainService.retrieveLatestMarsTerrain().dataValues,
+			latestRobotAvailable = await robotService.retrieveLatestRobotAvailable().dataValues,
 			areInstructionsValid = (_verifyInitialPositionFormat(position) && _verifyCommandString(req.query.commandString));
 		if (areInstructionsValid) {
-			for (const command of req.query.commandString) {
-				[position, status] = objectTrackerService.executeCommand(position, availableCommadsMap[command]);
-			}
+			[position, status] = objectTrackerService.executeStringOfCommands(latestMarsTerrain, latestRobotAvailable, position, req.query.commandString, availableCommadsMap)
 		}
 		res.status(200).send([position, status]);
 	} catch (error) {

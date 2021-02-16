@@ -12,6 +12,13 @@ async function createMarsTerrain(dimensionX, dimensionY) {
 	return newMarsTerrain;
 }
 
+async function retrieveLatestMarsTerrain() {
+	return await models.MarsTerrain.findOne({
+		order: ['Id', 'DESC'],
+	});
+}
+
 module.exports = {
-	createMarsTerrain
+	createMarsTerrain,
+	retrieveLatestMarsTerrain
 }

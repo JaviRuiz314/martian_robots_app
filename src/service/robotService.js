@@ -1,18 +1,20 @@
 'use strict'
 
 const
+	marsTerrainService = require('./marsTerrainService'),
 	models = require('../models'),
-	util = require('../shared/util');
+	util = require('../shared/util'),
+	Op = require('sequelize').Op;
 
 
 async function createRobot(name) {
-	const latestMarsTerrain = await models.MarsTerrain.findOne({
-		order: ['Id', 'DESC'],
-	});
-	const newRobot = await models.Robot.create({
-		Name: name,
-		Status: util.CREATED_ROBOT_STATUS
-	});
+	const
+		latestMarsTerrain = await marsTerrainService.retrieveLatestMarsTerrain(),
+		newRobot = await models.Robot.create({
+			Name: name,
+			Status: util.CREATED_ROBOT_STATUS
+		});
+
 	await models.MarsTerrainToRobot.create({
 		MarsTerrainId: latestMarsTerrain.dataValues.Id,
 		RobotId: newRobot.dataValues.Id
@@ -30,7 +32,17 @@ async function updateStatus(id, status) {
 	);
 }
 
+async function retrieveLatestRobotAvailable() {
+	return await models.MarsTerrain.findOne({
+		where: {
+			Status: { [Op.not]: util.LOST_ROBOT_STATUS }
+		},
+		order: ['Id', 'DESC'],
+	});
+}
+
 module.exports = {
 	createRobot,
-	updateStatus
+	updateStatus,
+	retrieveLatestRobotAvailable
 }

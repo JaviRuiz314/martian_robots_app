@@ -14,6 +14,14 @@ function executeCommand(position, movement) {
 	return [position, util.ACTIVE_ROBOT_STATUS];
 }
 
+function executeStringOfCommands(perimeter, robot, position, commandString, availableCommadsMap) {
+	for (const command of commandString) {
+		let [position, status] = objectTrackerService.executeCommand(position, availableCommadsMap[command]);
+		_checkIfRobotIsStillInsideThePerimeter(position, perimeter)
+	}
+}
+
 module.exports = {
-	executeCommand
+	executeCommand,
+	executeStringOfCommands
 }

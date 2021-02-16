@@ -11,7 +11,6 @@ async function createNewRobot(req, res) {
 		console.log('createNewRobot unexpected error: ' + err.toString());
 		res.send(500).send('Server error');
 	}
-
 }
 
 module.exports = {
