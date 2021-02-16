@@ -12,11 +12,17 @@ class RobotService {
 	}
 
 	static async createRobot() {
+		const latestMarsTerrain = await models.MarsTerrain.findOne({
+			order: ['Id', 'DESC'],
+		});
 		const newRobot = await models.Robot.create({
 			Name: this.name,
 			Status: util.CREATED_ROBOT_STATUS
 		});
-		newRobot.inPosition = this.inPosition;
+		await models.MarsTerrainToRobot.create({
+			MarsTerrainId: latestMarsTerrain.dataValues.Id,
+			RobotId: newRobot.dataValues.Id
+		});
 		return newRobot;
 	}
 	async updateStatus(id, status) {
