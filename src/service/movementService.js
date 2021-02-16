@@ -1,11 +1,6 @@
 'use strict'
 
-const direction2AngleMap = {
-	"E": 0,
-	"N": 90,
-	"W": 180,
-	"S": 270
-};
+const util = require('../shared/util');
 
 function dTrig(trigFunc, angle) {
 	return trigFunc(angle * Math.PI / 180);
@@ -18,18 +13,18 @@ function _normalizeAngle(angle) {
 }
 
 function changueDirection(direction, directionModification) {
-	let newAngle = _normalizeAngle(direction2AngleMap[direction] + directionModification);
-	return Object.keys(direction2AngleMap).find(key => direction2AngleMap[key] === newAngle);
+	let newAngle = _normalizeAngle(util.DIRECTION2ANGLE_MAP[direction] + directionModification);
+	return Object.keys(util.DIRECTION2ANGLE_MAP).find(key => util.DIRECTION2ANGLE_MAP[key] === newAngle);
 }
 
-function changeCoordinates(xCoordinate, yCoordinate, direction, movementModification) {
-	xCoordinate = Math.round(xCoordinate + dTrig(Math.cos, direction2AngleMap[direction]) * movementModification);
-	yCoordinate = Math.round(yCoordinate + dTrig(Math.sin, direction2AngleMap[direction]) * movementModification);
+function calculateNewCoordinates(xCoordinate, yCoordinate, direction, movementModification) {
+	xCoordinate = Math.round(xCoordinate + dTrig(Math.cos, util.DIRECTION2ANGLE_MAP[direction]) * movementModification);
+	yCoordinate = Math.round(yCoordinate + dTrig(Math.sin, util.DIRECTION2ANGLE_MAP[direction]) * movementModification);
 
 	return [xCoordinate, yCoordinate];
 }
 
 module.exports = {
 	changueDirection,
-	changeCoordinates
+	calculateNewCoordinates
 }
