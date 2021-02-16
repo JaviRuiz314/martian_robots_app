@@ -8,20 +8,29 @@ const
 
 
 async function createRobot(name) {
-	const
-		latestMarsTerrain = await marsTerrainService.retrieveLatestMarsTerrain(),
-		newRobot = await models.Robot.create({
-			Name: name,
-			Status: util.CREATED_ROBOT_STATUS
-		});
+	try {
+		console.log(name);
+		const
+			transaction = await models.Robot.sequelize.transaction(),
+			latestMarsTerrain = await marsTerrainService.retrieveLatestMarsTerrain(),
+			newRobot = await models.Robot.create({
+				Name: name,
+				Status: util.CREATED_ROBOT_STATUS
+			}, { transaction });
 
-	await models.MarsTerrainToRobot.create({
-		MarsTerrainId: latestMarsTerrain.dataValues.Id,
-		RobotId: newRobot.dataValues.Id
-	});
-	return newRobot;
+		await models.MarsTerrain2Robot.create({
+			MarsTerrainId: latestMarsTerrain.dataValues.Id,
+			RobotId: newRobot.dataValues.Id
+		}, { transaction });
+		transaction.commit();
+		return newRobot;
+	} catch (error) {
+		transaction.rollback();
+		console.log('createRobot | unexpected error: ' + error);
+		throw error;
+	}
 }
-async function updateStatus(id, status) {
+async function updateRobotStatus(id, status) {
 	await models.Robot.update(
 		{ Status: status },
 		{
@@ -33,16 +42,16 @@ async function updateStatus(id, status) {
 }
 
 async function retrieveLatestRobotAvailable() {
-	return await models.MarsTerrain.findOne({
+	return await models.Robot.findOne({
 		where: {
 			Status: { [Op.not]: util.LOST_ROBOT_STATUS }
 		},
-		order: ['Id', 'DESC'],
+		order: [['Id', 'DESC']],
 	});
 }
 
 module.exports = {
 	createRobot,
-	updateStatus,
+	updateRobotStatus,
 	retrieveLatestRobotAvailable
 }

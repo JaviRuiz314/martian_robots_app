@@ -14,7 +14,7 @@ async function createMarsTerrain(dimensionX, dimensionY) {
 
 async function retrieveLatestMarsTerrain() {
 	return await models.MarsTerrain.findOne({
-		order: ['Id', 'DESC'],
+		order:[ ['Id', 'DESC']],
 	});
 }
 

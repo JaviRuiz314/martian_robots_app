@@ -41,17 +41,20 @@ function _parseInitialPosition(intialPositionAsString) {
 async function receiveInstructions(req, res) {
 	try {
 		let
+			response,
+			status,
 			position = _parseInitialPosition(req.query.inPosition),
-			status;
+
 		const
 			availableCommadsMap = await commandController.getCommandNametoValuesMap(),
-			latestMarsTerrain = await marsTerrainService.retrieveLatestMarsTerrain().dataValues,
-			latestRobotAvailable = await robotService.retrieveLatestRobotAvailable().dataValues,
+			latestMarsTerrain = await marsTerrainService.retrieveLatestMarsTerrain(),
+			latestRobotAvailable = await robotService.retrieveLatestRobotAvailable(),
 			areInstructionsValid = (_verifyInitialPositionFormat(position) && _verifyCommandString(req.query.commandString));
 		if (areInstructionsValid) {
-			[position, status] = objectTrackerService.executeStringOfCommands(latestMarsTerrain, latestRobotAvailable, position, req.query.commandString, availableCommadsMap)
+			[position, status] = await objectTrackerService.executeStringOfCommands(latestMarsTerrain.dataValues, latestRobotAvailable.dataValues.Id, position, req.query.commandString, availableCommadsMap);
+			response = status === util.LOST_ROBOT_STATUS ? { position, status } : position
 		}
-		res.status(200).send([position, status]);
+		res.status(200).send(response);
 	} catch (error) {
 		console.log('receiveInstruction: unexpected error: ' + error.toString());
 		res.status(503).send('Unexpected error');
