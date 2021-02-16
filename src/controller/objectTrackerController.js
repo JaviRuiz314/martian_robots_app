@@ -30,6 +30,16 @@ function _verifyCommandString(commandString) {
 	return true;
 }
 
+function _verifyNeededObjects(marsTerrain, robot) {
+	if (!marsTerrain) {
+		throw 'No valid grid available, please create one first';
+	} else if (!robot) {
+		throw 'No valid robot available for this grid, please create one first';
+	}
+
+	return true;
+}
+
 function _parseInitialPosition(intialPositionAsString) {
 	const intialPositionAsArray = [];
 	for (let char of intialPositionAsString) {
@@ -50,7 +60,7 @@ async function receiveInstructions(req, res) {
 			latestMarsTerrain = await marsTerrainService.retrieveLatestMarsTerrain(),
 			latestRobotAvailable = await robotService.retrieveLatestRobotAvailable(),
 			areInstructionsValid = (_verifyInitialPositionFormat(position) && _verifyCommandString(req.query.commandString));
-		if (areInstructionsValid) {
+		if (areInstructionsValid && _verifyNeededOBjects(latestMarsTerrain.dataValues, latestRobotAvailable.dataValues)) {
 			[position, status] = await objectTrackerService.executeStringOfCommands(latestMarsTerrain.dataValues, latestRobotAvailable.dataValues.Id, position, req.query.commandString, availableCommadsMap);
 			response = status === util.LOST_ROBOT_STATUS ? { position, status } : position
 		}
