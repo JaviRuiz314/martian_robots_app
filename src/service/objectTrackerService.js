@@ -4,6 +4,11 @@ const
 	movementService = require('./movementService'),
 	util = require('../shared/util');
 
+
+function _checkIfRobotIsStillInsideThePerimeter(position, perimeter) {
+	
+}
+
 function executeCommand(position, movement) {
 	if (movement.movementModification === 0) { // Change on direction
 		position[2] = movementService.changueDirection(position[2], movement.directionModification);
