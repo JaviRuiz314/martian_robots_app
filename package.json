@@ -1,23 +1,25 @@
 {
-    "name": "martian_robots_app",
-    "version": "1.0.0",
-    "license": "MIT",
-    "scripts": {
-        "start": "node src/index.js",
-        "updatedatabase:migrate": "npx sequelize-cli db:migrate",
-        "updatedatabase:seed": "npx sequelize-cli db:seed:all"
-    },
-    "dependencies": {
-        "axios": "^0.21.1",
-        "body-parser": "1.19.0",
-        "dotenv": "8.2.0",
-        "express": "4.17.1",
-        "pg": "8.5.1",
-        "pg-hstore": "2.3.3",
-        "prompt": "^1.1.0",
-        "sequelize": "6.5.0"
-    },
-    "devDependencies": {
-        "sequelize-cli": "^6.2.0"
-    }
+  "name": "martian_robots_app",
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "start": "node src/index.js",
+    "updatedatabase:migrate": "npx sequelize-cli db:migrate",
+    "updatedatabase:seed": "npx sequelize-cli db:seed:all",
+    "test": "jest"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "body-parser": "1.19.0",
+    "dotenv": "8.2.0",
+    "express": "4.17.1",
+    "pg": "8.5.1",
+    "pg-hstore": "2.3.3",
+    "prompt": "^1.1.0",
+    "sequelize": "6.5.0"
+  },
+  "devDependencies": {
+    "jest": "^26.6.3",
+    "sequelize-cli": "^6.2.0"
+  }
 }
