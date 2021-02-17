@@ -16,11 +16,11 @@ function _checkIfRobotIsStillInsideThePerimeter(coordinates, perimeter) {
 	return isTheRobotOutsideThePerimeter;
 }
 
-async function _updateRobotCoordinates(coordinates, position, perimeter, robotId) {
+async function _updateRobotCoordinates(coordinates, position, perimeter, robotId, command) {
 	let status = util.ACTIVE_ROBOT_STATUS;
 	if (_checkIfRobotIsStillInsideThePerimeter(coordinates, perimeter)) {
 		status = util.LOST_ROBOT_STATUS;
-		await robotService.updateRobotStatus(robotId, status);
+		await robotService.updateLostRobotStatus(robotId, position, command);
 	} else {
 		position[0] = coordinates[0];
 		position[1] = coordinates[1];
@@ -29,13 +29,29 @@ async function _updateRobotCoordinates(coordinates, position, perimeter, robotId
 	return [position[0], position[1], status];
 }
 
-async function executeCommand(perimeter, robotId, position, movement) {
-	let status;
+async function _checkLostRobotsScent(robotPosition, perimeter, command) {
+	let hasNotRobotScent = true;
+	if (robotPosition[0] === perimeter.Dimension_X || robotPosition[1] === perimeter.Dimension_Y) {
+		const lostRobotScent = await robotService.findLostRobotsScent(robotPosition, command);
+		hasNotRobotScent = lostRobotScent.length == 0;
+	}
+	return hasNotRobotScent;
+}
+
+async function executeCommand(perimeter, robotId, position, availableCommadsMap, command) {
+	console.log(availableCommadsMap);
+	console.log(command);
+	let
+		status,
+		movement = availableCommadsMap[command];
 	if (movement.movementModification === 0) { // Change on direction
 		position[2] = movementService.changueDirection(position[2], movement.directionModification);
 	} else if (movement.directionModification === 0) { // Change on axis
-		const newCoordinates = movementService.calculateNewCoordinates(position[0], position[1], position[2], movement.movementModification);
-		[position[0], position[1], status] = await _updateRobotCoordinates(newCoordinates, position, perimeter, robotId)
+		if (await _checkLostRobotsScent(position, perimeter, command)) {
+			const newCoordinates = movementService.calculateNewCoordinates(position[0], position[1], position[2], movement.movementModification);
+			[position[0], position[1], status] = await _updateRobotCoordinates(newCoordinates, position, perimeter, robotId, command)
+		}
+
 	}
 	return [position, status];
 }
@@ -43,7 +59,7 @@ async function executeCommand(perimeter, robotId, position, movement) {
 async function executeStringOfCommands(perimeter, robotId, position, commandString, availableCommadsMap) {
 	let status;
 	for (const command of commandString) {
-		[position, status] = await executeCommand(perimeter, robotId, position, availableCommadsMap[command]);
+		[position, status] = await executeCommand(perimeter, robotId, position, availableCommadsMap, command);
 		if (status === util.LOST_ROBOT_STATUS) {
 			break;
 		}

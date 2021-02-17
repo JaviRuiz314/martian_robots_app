@@ -17,13 +17,17 @@ module.exports = function (sequelize, DataTypes) {
 			type: DataTypes.STRING,
 			field: 'status'
 		},
-		Lost_Grid_Position_X: {
-			type: DataTypes.INTEGER,
-			field: 'lost_grid_position_x'
+		LostGridPosition: {
+			type: DataTypes.ARRAY((DataTypes.INTEGER)),
+			field: 'lost_grid_position'
 		},
-		Lost_Grid_Position_Y: {
-			type: DataTypes.INTEGER,
-			field: 'lost_grid_position_y'
+		LostGridOrientation: {
+			type: DataTypes.STRING,
+			field: 'lost_grid_orientation'
+		},
+		LastKnownCommand: {
+			type: DataTypes.STRING,
+			field: 'last_known_command'
 		},
 		updateAt: {
 			type: DataTypes.DATE,

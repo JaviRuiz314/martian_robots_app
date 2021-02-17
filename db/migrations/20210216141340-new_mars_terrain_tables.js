@@ -19,12 +19,14 @@ module.exports = {
         { transaction }
       );
       await queryInterface.sequelize.query('ALTER TABLE IF EXISTS robot '
-        + 'ADD COLUMN lost_grid_position_x  integer, '
-        + 'ADD COLUMN lost_grid_position_y  integer ',
+        + 'ADD COLUMN lost_grid_position integer ARRAY, '
+        + 'ADD COLUMN lost_grid_orientation character varying(250), '
+        + 'ADD COLUMN last_known_command  character varying(250) ',
         { transaction }
       );
       transaction.commit();
     } catch (error) {
+      console.log('ERROR: ' + error);
       transaction.rollback();
     }
   },
@@ -32,17 +34,19 @@ module.exports = {
   down: async (queryInterface, Sequelize) => {
     const transaction = await queryInterface.sequelize.transaction();
     try {
-      await queryInterface.sequelize.query('DROP TABLE marsterrain',
-        { transaction }
-      );
       await queryInterface.sequelize.query('DROP TABLE marsterrain2robot',
         { transaction }
       );
+
+      await queryInterface.sequelize.query('DROP TABLE marsterrain',
+        { transaction }
+      );
+
       await queryInterface.sequelize.query('ALTER TABLE robot '
-        + 'DROP COLUMN lost_grid_position_x, ',
-        + 'DROP COLUMN lost_grid_position_y ',
-      { transaction }
-    );
+        + 'DROP COLUMN lost_grid_position, ',
+        + 'DROP COLUMN last_known_command ',
+        { transaction }
+      );
       transaction.commit();
     } catch (error) {
       transaction.rollback();
