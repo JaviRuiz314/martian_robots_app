@@ -59,8 +59,9 @@ async function receiveInstructions(req, res) {
 			availableCommadsMap = await commandController.getCommandNametoValuesMap(),
 			latestMarsTerrain = await marsTerrainService.retrieveLatestMarsTerrain(),
 			latestRobotAvailable = await robotService.retrieveLatestRobotAvailable(),
-			areInstructionsValid = (_verifyInitialPositionFormat(position) && _verifyCommandString(req.query.commandString));
-		if (areInstructionsValid && _verifyNeededOBjects(latestMarsTerrain.dataValues, latestRobotAvailable.dataValues)) {
+			areInstructionsValid = (_verifyInitialPositionFormat(position) && _verifyCommandString(req.query.commandString)),
+			areRequiredObjectsValid = (_verifyNeededOBjects(latestMarsTerrain.dataValues, latestRobotAvailable.dataValues));
+		if (areInstructionsValid && areRequiredObjectsValid) {
 			[position, status] = await objectTrackerService.executeStringOfCommands(latestMarsTerrain.dataValues, latestRobotAvailable.dataValues.Id, position, req.query.commandString, availableCommadsMap);
 			response = status === util.LOST_ROBOT_STATUS ? { position, status } : position
 		}
