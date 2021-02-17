@@ -60,6 +60,7 @@ async function receiveInstructions(req, res) {
 			latestRobotAvailable = await robotService.retrieveLatestRobotAvailable(),
 			areInstructionsValid = (_verifyInitialPositionFormat(position) && _verifyCommandString(req.query.commandString)),
 			areRequiredObjectsValid = _verifyNeededObjects(latestMarsTerrain.dataValues, latestRobotAvailable.dataValues);
+
 		if (areInstructionsValid && areRequiredObjectsValid) {
 			[position, status] = await objectTrackerService.executeStringOfCommands(latestMarsTerrain.dataValues, latestRobotAvailable.dataValues.Id, position, req.query.commandString, availableCommadsMap);
 			response = status === util.LOST_ROBOT_STATUS ? { position, status } : position
@@ -67,7 +68,7 @@ async function receiveInstructions(req, res) {
 		res.status(200).send(response);
 	} catch (error) {
 		console.log('receiveInstruction: unexpected error: ' + error.toString());
-		res.status(503).send('receiveInstruction | Unexpected server error: ' + error.toString());
+		res.status(500).send('receiveInstruction | Unexpected server error: ' + error.toString());
 	}
 }
 

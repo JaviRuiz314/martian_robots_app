@@ -16,7 +16,7 @@ async function createNewRobot(req, res) {
 		}
 	} catch (err) {
 		console.log('createNewRobot unexpected error: ' + err.toString());
-		res.send(500).send('Unexpected server error: ' + err.toString());
+		res.status(500).send('Unexpected server error: ' + err.toString());
 	}
 }
 
