@@ -39,8 +39,6 @@ async function _checkLostRobotsScent(robotPosition, perimeter, command) {
 }
 
 async function executeCommand(perimeter, robotId, position, availableCommadsMap, command) {
-	console.log(availableCommadsMap);
-	console.log(command);
 	let
 		status,
 		movement = availableCommadsMap[command];
@@ -63,8 +61,6 @@ async function executeStringOfCommands(perimeter, robotId, position, commandStri
 		if (status === util.LOST_ROBOT_STATUS) {
 			break;
 		}
-		console.log('position');
-		console.log(position);
 	}
 	return [position, status];
 }
