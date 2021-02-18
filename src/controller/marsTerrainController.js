@@ -5,7 +5,7 @@ const util = require('../shared/util');
 
 function _validateGridCoordinates(xCoordinate, yCoordinate) {
 	const
-		areGridCoordinatesPresentOnTheRequest = (xCoordinate || yCoordinate),
+		areGridCoordinatesPresentOnTheRequest = (xCoordinate && yCoordinate),
 		areGridCoordinatesBetweenLimits = (xCoordinate <= util.GRID_LIMIT_VALUE && yCoordinate <= util.GRID_LIMIT_VALUE),
 		areGridCoordinatesPositive = (xCoordinate >= 0 && yCoordinate >= 0);
 
@@ -28,7 +28,7 @@ async function createMarsTerrain(req, res) {
 
 	} catch (err) {
 		console.log('createMarsTerrain unexpected error: ' + err.toString());
-		res.send(500).send('Unexpected server error: ' + err.toString());
+		res.status(500).send('Unexpected server error: ' + err.toString());
 	}
 }
 

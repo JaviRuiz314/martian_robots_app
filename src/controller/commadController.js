@@ -8,15 +8,13 @@ async function getSupportedCommands() {
 }
 
 async function getCommandNametoValuesMap() {
-	let 
+	let
 		availableCommads = await commandService.getSupportedCommands(),
-		commandNameToValuesName = {
-			movementModification: '',
-			directionModification: ''
-		};
+		commandNameToValuesName = {};
+
 	for (let command of availableCommads) {
 		commandNameToValuesName[command.dataValues.Name] = {
-			movementModification: command.dataValues.Movement_change, 
+			movementModification: command.dataValues.Movement_change,
 			directionModification: command.dataValues.Direction_change
 		};
 	}
