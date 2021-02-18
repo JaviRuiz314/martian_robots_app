@@ -3,10 +3,8 @@
 const
 	express = require('express'),
 	app = express.Router(),
-	robotController = require('../controller/robotController');
+	robotController = require('../controller').Robot;
 
-app.post('/getnewrobot', async (req, res) => {
-	await robotController.createNewRobot(req, res);
-});
+app.post('/getnewrobot', robotController.createNewRobot);
 
 module.exports = app;

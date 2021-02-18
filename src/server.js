@@ -1,5 +1,3 @@
-const { route } = require('./routes/robotRoutes');
-
 const
 	express = require('express'),
 	app = express(),
