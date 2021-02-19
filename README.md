@@ -101,6 +101,13 @@ The app is fully Dockerize, you can just clone the repository and build the dock
   1. PORT 
   2. DATABASE_URL (being a postquesSQL database)
 
+The commands you would need to run in order to build the image and run the container should be
+
+```
+docker build -t <tagname>/martian-robots --build-arg PORT=<port you want to use> --build-arg DATABASE_URL=<your database url> .
+docker run --rm -it -p <your port>:<your port> <tagname>/martian-robots
+```
+
 The application it is also hosted on Heroku and ready to use, the url should be:
 
 ```
