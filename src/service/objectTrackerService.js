@@ -66,6 +66,5 @@ async function executeStringOfCommands(perimeter, robotId, position, commandStri
 }
 
 module.exports = {
-	executeCommand,
 	executeStringOfCommands
 }

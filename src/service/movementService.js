@@ -2,7 +2,7 @@
 
 const util = require('../shared/util');
 
-function dTrig(trigFunc, angle) {
+function _doTringFunction(trigFunc, angle) {
 	return trigFunc(angle * Math.PI / 180);
 }
 
@@ -18,8 +18,8 @@ function changueDirection(direction, directionModification) {
 }
 
 function calculateNewCoordinates(xCoordinate, yCoordinate, direction, movementModification) {
-	xCoordinate = Math.round(xCoordinate + dTrig(Math.cos, util.DIRECTION2ANGLE_MAP[direction]) * movementModification);
-	yCoordinate = Math.round(yCoordinate + dTrig(Math.sin, util.DIRECTION2ANGLE_MAP[direction]) * movementModification);
+	xCoordinate = Math.round(xCoordinate + _doTringFunction(Math.cos, util.DIRECTION2ANGLE_MAP[direction]) * movementModification);
+	yCoordinate = Math.round(yCoordinate + _doTringFunction(Math.sin, util.DIRECTION2ANGLE_MAP[direction]) * movementModification);
 
 	return [xCoordinate, yCoordinate];
 }
