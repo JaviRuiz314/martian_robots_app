@@ -87,7 +87,45 @@ describe('controller command', () => {
 			expect(send).toHaveBeenCalledWith('New command created: ' + newCommand.dataValues);
 			expect(newCommand).toEqual(newCommandOnDatabase);
 		});
-		it('it should throw an error if the body is not valid', async () => {
+		it('it should throw an error if the name in the body is not valid', async () => {
+			//GIVEN
+			const
+				req = {
+					body: {
+						name: 'ERROR',
+						movementChange: 1,
+						directionChange: 90
+					}
+				}
+			//WHEN
+			const newCommand = await mocks.commandController.createNewCommand(req, res);
+			//THEN
+			expect(mocks.commandService.createNewCommand).toHaveBeenCalledTimes(0);
+			expect(res.status).toHaveBeenCalledTimes(1);
+			expect(res.status).toHaveBeenCalledWith(500);
+			expect(send).toHaveBeenCalledTimes(1);
+			expect(send).toHaveBeenCalledWith("createNewCommand | Unexpected error: The name of the command must be a single character");
+		});
+		it('it should throw an error if the movementChange in the body is not valid', async () => {
+			//GIVEN
+			const
+				req = {
+					body: {
+						name: 'T',
+						movementChange: 'error',
+						directionChange: 90
+					}
+				}
+			//WHEN
+			const newCommand = await mocks.commandController.createNewCommand(req, res);
+			//THEN
+			expect(mocks.commandService.createNewCommand).toHaveBeenCalledTimes(0);
+			expect(res.status).toHaveBeenCalledTimes(1);
+			expect(res.status).toHaveBeenCalledWith(500);
+			expect(send).toHaveBeenCalledTimes(1);
+			expect(send).toHaveBeenCalledWith("createNewCommand | Unexpected error: The movement value around the axies must be an integer");
+		});
+		it('it should throw an error if the directionChange in the body is not valid', async () => {
 			//GIVEN
 			const
 				req = {
