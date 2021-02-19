@@ -7,9 +7,11 @@ function _validateCommandBody(commandData) {
 		throw "The name of the command must be a single character";
 	} else if (typeof (commandData.movementChange) !== "number") {
 		throw "The movement value around the axies must be an integer";
-	} else if (typeof (commandData.directionChange) !== "number" && commandData.directionChange % 90 !== 0) {
+	} else if (typeof (commandData.directionChange) !== "number" || commandData.directionChange % 90 !== 0) {
 		throw "Direction angle change must be an integer multiple of 90";
 	}
+
+	return true;
 }
 
 async function getSupportedCommands() {

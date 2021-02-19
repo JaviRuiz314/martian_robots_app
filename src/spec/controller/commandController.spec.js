@@ -1,8 +1,9 @@
 'use strict'
-
-const { createNewCommand } = require('../../service/commandService');
-
 const mocks = {};
+
+let
+	send,
+	res = {};
 
 
 describe('controller command', () => {
@@ -16,6 +17,9 @@ describe('controller command', () => {
 
 		mocks.commandService = require('../../service/commandService');
 		mocks.commandController = require('../../controller/commadController');
+
+		send = jest.fn();
+		res = { status: jest.fn().mockReturnValue({ send }) };
 	});
 	afterEach(() => {
 		jest.resetAllMocks();
@@ -74,18 +78,17 @@ describe('controller command', () => {
 						Movement_change: 0,
 						Direction_change: 180
 					}
-				}
+				};
 			mocks.commandService.createNewCommand.mockResolvedValue(newCommandOnDatabase);
 			//WHEN
-			const newCommand = await mocks.commandController.createNewCommand(req, res);
+			await mocks.commandController.createNewCommand(req, res);
 			//THEN
 			expect(mocks.commandService.createNewCommand).toHaveBeenCalledTimes(1);
 			expect(mocks.commandService.createNewCommand).toHaveBeenCalledWith(req.body);
 			expect(res.status).toHaveBeenCalledTimes(1);
 			expect(res.status).toHaveBeenCalledWith(200);
 			expect(send).toHaveBeenCalledTimes(1);
-			expect(send).toHaveBeenCalledWith('New command created: ' + newCommand.dataValues);
-			expect(newCommand).toEqual(newCommandOnDatabase);
+			expect(send).toHaveBeenCalledWith('New command created: ' + newCommandOnDatabase.dataValues);
 		});
 		it('it should throw an error if the name in the body is not valid', async () => {
 			//GIVEN
@@ -98,7 +101,7 @@ describe('controller command', () => {
 					}
 				}
 			//WHEN
-			const newCommand = await mocks.commandController.createNewCommand(req, res);
+			await mocks.commandController.createNewCommand(req, res);
 			//THEN
 			expect(mocks.commandService.createNewCommand).toHaveBeenCalledTimes(0);
 			expect(res.status).toHaveBeenCalledTimes(1);
@@ -117,7 +120,7 @@ describe('controller command', () => {
 					}
 				}
 			//WHEN
-			const newCommand = await mocks.commandController.createNewCommand(req, res);
+			await mocks.commandController.createNewCommand(req, res);
 			//THEN
 			expect(mocks.commandService.createNewCommand).toHaveBeenCalledTimes(0);
 			expect(res.status).toHaveBeenCalledTimes(1);
@@ -136,7 +139,7 @@ describe('controller command', () => {
 					}
 				}
 			//WHEN
-			const newCommand = await mocks.commandController.createNewCommand(req, res);
+			await mocks.commandController.createNewCommand(req, res);
 			//THEN
 			expect(mocks.commandService.createNewCommand).toHaveBeenCalledTimes(0);
 			expect(res.status).toHaveBeenCalledTimes(1);

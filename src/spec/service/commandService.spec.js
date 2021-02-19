@@ -3,7 +3,7 @@
 const
 	mocks = {};
 
-describe('service robot', () => {
+describe('service command', () => {
 	beforeEach(() => {
 		jest.mock('../../models', () => {
 			return {
@@ -49,7 +49,7 @@ describe('service robot', () => {
 					}];
 			mocks.models.Command.findAll.mockResolvedValue(commandsInDatabase);
 			//WHEN
-			const commandList = await mocks.commandService.getSupportedCommands(dimensionX, dimensionY);
+			const commandList = await mocks.commandService.getSupportedCommands();
 			//THEN
 			expect(mocks.models.Command.findAll).toHaveBeenCalledTimes(1);
 			expect(mocks.models.Command.findAll).toHaveBeenCalledWith();
@@ -87,7 +87,7 @@ describe('service robot', () => {
 				//THEN
 				expect(mocks.models.Command.create).toHaveBeenCalledTimes(1);
 				expect(mocks.models.Command.create).toHaveBeenCalledWith({
-					Name: commandData,
+					Name: commandData.name,
 					Movement_changue: commandData.movementChange,
 					Direction_change: commandData.directionChange
 				});
@@ -104,7 +104,7 @@ describe('service robot', () => {
 					};
 				mocks.models.Command.create.mockRejectedValue(error);
 				//WHEN
-				await expect(mocks.commandService.createNewCommand).rejects.toThrowError(error);
+				await expect(mocks.commandService.createNewCommand(commandData)).rejects.toThrowError(error);
 				//THEN
 				expect(mocks.models.Command.create).toHaveBeenCalledTimes(1);
 				expect(mocks.models.Command.create).toHaveBeenCalledWith({
