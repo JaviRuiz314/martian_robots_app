@@ -2,7 +2,7 @@
 
 const 
 	robotService = require('../service/robotService'),
-	marsTerrainService = require('../service/marsTerrainService')
+	marsTerrainService = require('../service/marsTerrainService');
 
 function _validateRobotRequest(name) {
 	if (!name) {

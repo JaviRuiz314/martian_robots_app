@@ -5,9 +5,8 @@ const models = require('../models');
 function _buildQueryCondition(gridInfo) {
 	let condition = '';
 	if (gridInfo && gridInfo.gridId) {
-		condition = {  Id: parseInt(gridInfo.gridId) }
+		condition = { Id: parseInt(gridInfo.gridId) }
 	}
-	
 	return condition;
 }
 
@@ -33,7 +32,7 @@ async function retrieveSelectedGridOrLatest(gridInfo) {
 		order: [['Id', 'DESC']],
 	});
 
-	return selectedGrid.dataValues; 
+	return selectedGrid.dataValues;
 }
 
 module.exports = {
