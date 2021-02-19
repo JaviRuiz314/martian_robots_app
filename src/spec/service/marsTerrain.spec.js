@@ -63,40 +63,6 @@ describe('service robot', () => {
 				Dimension_Y: dimensionY
 			});
 		});
-		describe('retrieveLatestMarsTerrain', () => {
-			it('it should retrieve the latests grid', async () => {
-				//GIVEN
-				const marsTerrain = {
-					dataValues: {
-						Id: 1,
-						Id: 1,
-						Dimension_X: 3,
-						Dimension_Y: 3
-					}
-				};
-				mocks.models.MarsTerrain.findOne.mockResolvedValue(marsTerrain);
-				//WHEN
-				const latestMarsTerrain = await mocks.marsTerrainService.retrieveLatestMarsTerrain();
-				//THEN
-				expect(mocks.models.MarsTerrain.findOne).toHaveBeenCalledTimes(1);
-				expect(mocks.models.MarsTerrain.findOne).toHaveBeenCalledWith({
-					order: [['Id', 'DESC']],
-				});
-				expect(latestMarsTerrain).toEqual(marsTerrain);
-			});
-			it('it shoud reject an error', async () => {
-				//GIVEN
-				const error = new Error('error');
-				mocks.models.MarsTerrain.findOne.mockRejectedValue(error);
-				//WHEN
-				await expect(mocks.marsTerrainService.retrieveLatestMarsTerrain()).rejects.toThrowError(error);
-				//THEN
-				expect(mocks.models.MarsTerrain.findOne).toHaveBeenCalledTimes(1);
-				expect(mocks.models.MarsTerrain.findOne).toHaveBeenCalledWith({
-					order: [['Id', 'DESC']],
-				});
-			})
-		});
 		describe('retrieveSelectedGridOrLatest', () => {
 			it('it should retrieve the grid with the correct Id', async () => {
 				//GIVEN

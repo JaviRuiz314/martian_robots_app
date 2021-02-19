@@ -32,7 +32,7 @@ async function _updateRobotCoordinates(coordinates, position, perimeter, robotId
 async function _checkLostRobotsScent(robotPosition, perimeter, command) {
 	let hasNotRobotScent = true;
 	if (robotPosition[0] === perimeter.Dimension_X || robotPosition[1] === perimeter.Dimension_Y) {
-		const lostRobotScent = await robotService.findLostRobotsScent(robotPosition, command);
+		const lostRobotScent = await robotService.findLostRobotsScent(robotPosition, command, perimeter.Id);
 		hasNotRobotScent = lostRobotScent.length == 0;
 	}
 	return hasNotRobotScent;

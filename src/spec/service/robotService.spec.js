@@ -7,7 +7,7 @@ describe('service robot', () => {
 	beforeEach(() => {
 		jest.mock('../../service/marsTerrainService', () => {
 			return {
-				retrieveLatestMarsTerrain: jest.fn()
+				retrieveSelectedGridOrLatest: jest.fn()
 			}
 		});
 		jest.mock('sequelize', () => {
@@ -47,20 +47,20 @@ describe('service robot', () => {
 			//GIVEN
 			const
 				name = 'test-robot',
-				latestMarsTerrain = { dataValues: { Id: 1 } },
+				latestMarsTerrain = { Id: 1 },
 				robot = {
 					dataValues: {
 						Id: 2,
 						Name: name
 					}
 				};
-			mocks.marsTerrainService.retrieveLatestMarsTerrain.mockResolvedValue(latestMarsTerrain);
+			mocks.marsTerrainService.retrieveSelectedGridOrLatest.mockResolvedValue(latestMarsTerrain);
 			mocks.models.Robot.create.mockResolvedValue(robot);
 			//WHEN
 			const newRobot = await mocks.robotService.createRobot(name);
 			//THEN
-			expect(mocks.marsTerrainService.retrieveLatestMarsTerrain).toHaveBeenCalledTimes(1);
-			expect(mocks.marsTerrainService.retrieveLatestMarsTerrain).toHaveBeenCalledWith();
+			expect(mocks.marsTerrainService.retrieveSelectedGridOrLatest).toHaveBeenCalledTimes(1);
+			expect(mocks.marsTerrainService.retrieveSelectedGridOrLatest).toHaveBeenCalledWith();
 			expect(mocks.models.Robot.create).toHaveBeenCalledTimes(1);
 			expect(mocks.models.Robot.create).toHaveBeenCalledWith({
 				Name: name,
@@ -68,7 +68,7 @@ describe('service robot', () => {
 			});
 			expect(mocks.models.MarsTerrain2Robot.create).toHaveBeenCalledTimes(1);
 			expect(mocks.models.MarsTerrain2Robot.create).toHaveBeenCalledWith({
-				MarsTerrainId: latestMarsTerrain.dataValues.Id,
+				MarsTerrainId: latestMarsTerrain.Id,
 				RobotId: newRobot.dataValues.Id
 			});
 			expect(newRobot).toEqual(robot);
@@ -77,15 +77,15 @@ describe('service robot', () => {
 			//GIVEN
 			const
 				name = 'test-robot',
-				latestMarsTerrain = { dataValues: { Id: 1 } },
+				latestMarsTerrain ={ Id: 1  },
 				error = new Error('test-error');
-			mocks.marsTerrainService.retrieveLatestMarsTerrain.mockResolvedValue(latestMarsTerrain);
+			mocks.marsTerrainService.retrieveSelectedGridOrLatest.mockResolvedValue(latestMarsTerrain);
 			mocks.models.Robot.create.mockRejectedValue(error);
 			//WHEN
 			await expect(mocks.robotService.createRobot(name)).rejects.toThrowError(error);
 			//THEN
-			expect(mocks.marsTerrainService.retrieveLatestMarsTerrain).toHaveBeenCalledTimes(1);
-			expect(mocks.marsTerrainService.retrieveLatestMarsTerrain).toHaveBeenCalledWith();
+			expect(mocks.marsTerrainService.retrieveSelectedGridOrLatest).toHaveBeenCalledTimes(1);
+			expect(mocks.marsTerrainService.retrieveSelectedGridOrLatest).toHaveBeenCalledWith();
 			expect(mocks.models.Robot.create).toHaveBeenCalledTimes(1);
 			expect(mocks.models.Robot.create).toHaveBeenCalledWith({
 				Name: name,
@@ -197,8 +197,9 @@ describe('service robot', () => {
 		it('it should retrieve the latests non-lost robot', async () => {
 			//GIVEN
 			const
-				LastRobotPosition = [3, 3, 'E'],
-				LastKnownCommand = 'F',
+				lastRobotPosition = [3, 3, 'E'],
+				lastKnownCommand = 'F',
+				gridId = 1,
 				lostRobotList = [{
 					dataValues: {
 						Id: 1,
@@ -211,17 +212,22 @@ describe('service robot', () => {
 				}];
 			mocks.models.Robot.findAll.mockResolvedValue(lostRobotList);
 			//WHEN
-			const lostRobots = await mocks.robotService.findLostRobotsScent(LastRobotPosition, LastKnownCommand);
+			const lostRobots = await mocks.robotService.findLostRobotsScent(lastRobotPosition, lastKnownCommand, gridId);
 			//THEN
 			expect(mocks.models.Robot.findAll).toHaveBeenCalledTimes(1);
 			expect(mocks.models.Robot.findAll).toHaveBeenCalledWith({
 				where: {
 					[mocks.sequelize.Op.and]: [
 						{ Status: util.LOST_ROBOT_STATUS },
-						{ LastKnownCommand: LastKnownCommand },
-						{ LostGridOrientation: LastRobotPosition[2] },
-						{ LostGridPosition: [LastRobotPosition[0], LastRobotPosition[1]] }
+						{ LastKnownCommand: lastKnownCommand },
+						{ LostGridOrientation: lastRobotPosition[2] },
+						{ LostGridPosition: [lastRobotPosition[0], lastRobotPosition[1]] }
 					]
+				},
+				include: {
+					model: mocks.models.MarsTerrain2Robot,
+					where: { MarsTerrainId: gridId },
+					required: true
 				}
 			});
 			expect(lostRobots).toEqual(lostRobotList);
@@ -229,22 +235,28 @@ describe('service robot', () => {
 		it('it shoud reject an error', async () => {
 			//GIVEN
 			const
-				LastRobotPosition = [3, 3, 'E'],
-				LastKnownCommand = 'F',
+				lastRobotPosition = [3, 3, 'E'],
+				lastKnownCommand = 'F',
+				gridId = 1,
 				error = new Error('test-error');
 			mocks.models.Robot.findAll.mockRejectedValue(error);
 			//WHEN
-			await expect(mocks.robotService.findLostRobotsScent(LastRobotPosition, LastKnownCommand)).rejects.toThrowError(error);
+			await expect(mocks.robotService.findLostRobotsScent(lastRobotPosition, lastKnownCommand, gridId)).rejects.toThrowError(error);
 			//THEN
 			expect(mocks.models.Robot.findAll).toHaveBeenCalledTimes(1);
 			expect(mocks.models.Robot.findAll).toHaveBeenCalledWith({
 				where: {
 					[mocks.sequelize.Op.and]: [
 						{ Status: util.LOST_ROBOT_STATUS },
-						{ LastKnownCommand: LastKnownCommand },
-						{ LostGridOrientation: LastRobotPosition[2] },
-						{ LostGridPosition: [LastRobotPosition[0], LastRobotPosition[1]] }
+						{ LastKnownCommand: lastKnownCommand },
+						{ LostGridOrientation: lastRobotPosition[2] },
+						{ LostGridPosition: [lastRobotPosition[0], lastRobotPosition[1]] }
 					]
+				},
+				include: {
+					model: mocks.models.MarsTerrain2Robot,
+					where: { MarsTerrainId: gridId },
+					required: true
 				}
 			});
 		})
@@ -279,20 +291,20 @@ describe('service robot', () => {
 			const
 				gridId = 1,
 				error = new Error('test-error');
-				mocks.models.Robot.findAndCountAll.mockRejectedValue(error);
-				//WHEN
-				await expect(mocks.robotService.retrieveLostRobotsInformationOnGrid(gridId)).rejects.toThrowError(error);
-				//THEN
-				expect(mocks.models.Robot.findAndCountAll).toHaveBeenCalledTimes(1);
-				expect(mocks.models.Robot.findAndCountAll).toHaveBeenCalledWith({
-					attributes: ['Id', 'Name', 'LostGridPosition', 'LostGridOrientation', 'LastKnownCommand'],
-					include: {
-						model: mocks.models.MarsTerrain2Robot,
-						where: { MarsTerrainId: gridId },
-						required: true
-					},
-					where: { Status: util.LOST_ROBOT_STATUS }
-				});
+			mocks.models.Robot.findAndCountAll.mockRejectedValue(error);
+			//WHEN
+			await expect(mocks.robotService.retrieveLostRobotsInformationOnGrid(gridId)).rejects.toThrowError(error);
+			//THEN
+			expect(mocks.models.Robot.findAndCountAll).toHaveBeenCalledTimes(1);
+			expect(mocks.models.Robot.findAndCountAll).toHaveBeenCalledWith({
+				attributes: ['Id', 'Name', 'LostGridPosition', 'LostGridOrientation', 'LastKnownCommand'],
+				include: {
+					model: mocks.models.MarsTerrain2Robot,
+					where: { MarsTerrainId: gridId },
+					required: true
+				},
+				where: { Status: util.LOST_ROBOT_STATUS }
+			});
 		})
 	})
 })

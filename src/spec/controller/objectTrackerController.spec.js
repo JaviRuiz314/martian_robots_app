@@ -5,11 +5,11 @@ let
 	send,
 	res = {};
 
-describe('controller marsTerrain', () => {
+describe('controller objectTracker', () => {
 	beforeEach(() => {
 		jest.mock('../../service/marsTerrainService', () => {
 			return {
-				retrieveLatestMarsTerrain: jest.fn()
+				retrieveSelectedGridOrLatest: jest.fn()
 			}
 		});
 		jest.mock('../../service/robotService', () => {
@@ -54,10 +54,10 @@ describe('controller marsTerrain', () => {
 				parsedInPosition = [1, 1, 'E'],
 				availableCommadsMap = 'test',
 				robot = { dataValues: { Id: 1} },
-				marsTerrain = { dataValues: { Id: 1 } },
+				marsTerrain = {  Id: 1 },
 				destination = '11W';
 			mocks.commadController.getCommandNametoValuesMap.mockResolvedValue(availableCommadsMap);
-			mocks.marsTerrainService.retrieveLatestMarsTerrain.mockResolvedValue(marsTerrain);
+			mocks.marsTerrainService.retrieveSelectedGridOrLatest.mockResolvedValue(marsTerrain);
 			mocks.robotService.retrieveLatestRobotAvailable.mockResolvedValue(robot);
 			mocks.objectTrackerService.executeStringOfCommands.mockResolvedValue([destination, 'test']);
 			//WHEN
@@ -65,12 +65,12 @@ describe('controller marsTerrain', () => {
 			//THEN
 			expect(mocks.commadController.getCommandNametoValuesMap).toHaveBeenCalledTimes(1);
 			expect(mocks.commadController.getCommandNametoValuesMap).toHaveBeenCalledWith();
-			expect(mocks.marsTerrainService.retrieveLatestMarsTerrain).toHaveBeenCalledTimes(1);
-			expect(mocks.marsTerrainService.retrieveLatestMarsTerrain).toHaveBeenCalledWith();
+			expect(mocks.marsTerrainService.retrieveSelectedGridOrLatest).toHaveBeenCalledTimes(1);
+			expect(mocks.marsTerrainService.retrieveSelectedGridOrLatest).toHaveBeenCalledWith();
 			expect(mocks.robotService.retrieveLatestRobotAvailable).toHaveBeenCalledTimes(1);
 			expect(mocks.robotService.retrieveLatestRobotAvailable).toHaveBeenCalledWith();
 			expect(mocks.objectTrackerService.executeStringOfCommands).toHaveBeenCalledTimes(1);
-			expect(mocks.objectTrackerService.executeStringOfCommands).toHaveBeenCalledWith(marsTerrain.dataValues, robot.dataValues.Id, parsedInPosition, req.query.commandString, availableCommadsMap);
+			expect(mocks.objectTrackerService.executeStringOfCommands).toHaveBeenCalledWith(marsTerrain, robot.dataValues.Id, parsedInPosition, req.query.commandString, availableCommadsMap);
 			expect(res.status).toHaveBeenCalledTimes(1);
 			expect(res.status).toHaveBeenCalledWith(200);
 			expect(send).toHaveBeenCalledTimes(1);

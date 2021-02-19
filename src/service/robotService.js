@@ -10,14 +10,14 @@ const
 async function createRobot(name) {
 	try {
 		const
-			latestMarsTerrain = await marsTerrainService.retrieveLatestMarsTerrain(),
+			latestMarsTerrain = await marsTerrainService.retrieveSelectedGridOrLatest(),
 			newRobot = await models.Robot.create({
 				Name: name,
 				Status: util.CREATED_ROBOT_STATUS
 			});
 
 		await models.MarsTerrain2Robot.create({
-			MarsTerrainId: latestMarsTerrain.dataValues.Id,
+			MarsTerrainId: latestMarsTerrain.Id,
 			RobotId: newRobot.dataValues.Id
 		});
 		return newRobot;
@@ -62,15 +62,20 @@ async function retrieveLatestRobotAvailable() {
 	});
 }
 
-async function findLostRobotsScent(LastRobotPosition, LastKnownCommand) {
+async function findLostRobotsScent(lastRobotPosition, lastKnownCommand, gridId) {
 	return await models.Robot.findAll({
 		where: {
 			[Op.and]: [
 				{ Status: util.LOST_ROBOT_STATUS },
-				{ LastKnownCommand: LastKnownCommand },
-				{ LostGridOrientation: LastRobotPosition[2] },
-				{ LostGridPosition: [LastRobotPosition[0], LastRobotPosition[1]] }
+				{ LastKnownCommand: lastKnownCommand },
+				{ LostGridOrientation: lastRobotPosition[2] },
+				{ LostGridPosition: [lastRobotPosition[0], lastRobotPosition[1]] }
 			]
+		},
+		include: {
+			model: models.MarsTerrain2Robot,
+			where: { MarsTerrainId: gridId },
+			required: true
 		}
 	})
 }
