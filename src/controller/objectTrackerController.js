@@ -21,8 +21,8 @@ function _verifyInitialPositionFormat(inPosition) {
 function _verifyCommandString(commandString) {
 	if (typeof (commandString) !== "string") {
 		throw 'The instruction must be a string';
-	} else if (commandString.length > 50) {
-		throw 'The instruction string can\'t exceed 50 characters';
+	} else if (commandString.length > 100) {
+		throw 'The instruction string can\'t exceed 100 characters';
 	} else if (!commandString.match(util.AVAILABLE_ORDERS_REGEX)) {
 		throw 'The instruction string contains commands that are not supported';
 	}
