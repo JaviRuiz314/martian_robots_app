@@ -3,7 +3,7 @@
 const commandService = require('../service/commandService');
 
 function _validateCommandBody(commandData) {
-	if (typeof (commandData.nsme) !== "string" || commandData.nsme.length !== 1) {
+	if (typeof (commandData.name) !== "string" || commandData.name.length !== 1) {
 		throw "The name of the command must be a single character";
 	} else if (typeof (commandData.movementChange) !== "number") {
 		throw "The movement value around the axies must be an integer";
@@ -31,10 +31,16 @@ async function getCommandNametoValuesMap() {
 }
 
 async function createNewCommand(req, res) {
-	if (_validateCommandBody(req.body)) {
-		const newCommand = await commandService.createNewCommand(req.body);
-		res.status(200).send('New command created: ' + newCommand.dataValues);
+	try {
+		if (_validateCommandBody(req.body)) {
+			const newCommand = await commandService.createNewCommand(req.body);
+			res.status(200).send('New command created: ' + newCommand.dataValues);
+		}
+	} catch (error) {
+		console.log("createNewCommand | Unexpected error: " + error);
+		res.status(500).send("createNewCommand | Unexpected error: " + error.toString());
 	}
+
 }
 
 module.exports = {

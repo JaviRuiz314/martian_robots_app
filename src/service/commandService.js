@@ -8,7 +8,7 @@ async function getSupportedCommands() {
 
 async function createNewCommand(commandData) {
 	return await models.Command.create({
-		Name: commandData,
+		Name: commandData.name,
 		Movement_changue: commandData.movementChange,
 		Direction_change: commandData.directionChange
 	});
