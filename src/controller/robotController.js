@@ -29,7 +29,7 @@ async function retrieveLostRobotsInformationOnGrid(req, res) {
 			response = await robotService.retrieveLostRobotsInformationOnGrid(gridToSearch.Id);
 		res.status(200).send(`The number of lost robots is ${response.count} and the information of those robots is: ${JSON.stringify(response.rows)}`);
 	} catch (error) {
-		console.error('retrieveNumberOfLostRobotsOnGrid | createNewRobot unexpected error: ' + error.toString());
+		console.log('retrieveNumberOfLostRobotsOnGrid | createNewRobot unexpected error: ' + error.toString());
 		res.status(500).send('retrieveNumberOfLostRobotsOnGrid| Unexpected server error: ' + error.toString());
 	}
 }
