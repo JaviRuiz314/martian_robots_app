@@ -75,10 +75,23 @@ async function findLostRobotsScent(LastRobotPosition, LastKnownCommand) {
 	})
 }
 
+async function retrieveLostRobotsInformationOnGrid(gridId) {
+	return await models.Robot.findAndCountAll({
+		attributes: ['Id', 'Name', 'LostGridPosition', 'LostGridOrientation', 'LastKnownCommand'],
+		include: {
+			model: models.MarsTerrain2Robot,
+			where: { MarsTerrainId: gridId },
+			required: true
+		},
+		where: { Status: util.LOST_ROBOT_STATUS}
+	});
+}
+
 module.exports = {
 	createRobot,
 	updateRobotStatus,
 	retrieveLatestRobotAvailable,
 	findLostRobotsScent,
-	updateLostRobotStatus
+	updateLostRobotStatus,
+	retrieveLostRobotsInformationOnGrid
 }
