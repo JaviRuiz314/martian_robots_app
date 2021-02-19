@@ -20,12 +20,6 @@ async function createMarsTerrain(dimensionX, dimensionY) {
 	return newMarsTerrain;
 }
 
-async function retrieveLatestMarsTerrain() {
-	return await models.MarsTerrain.findOne({
-		order: [['Id', 'DESC']],
-	});
-}
-
 async function retrieveSelectedGridOrLatest(gridInfo) {
 	const selectedGrid = await models.MarsTerrain.findOne({
 		where: _buildQueryCondition(gridInfo),
@@ -37,6 +31,5 @@ async function retrieveSelectedGridOrLatest(gridInfo) {
 
 module.exports = {
 	createMarsTerrain,
-	retrieveLatestMarsTerrain,
 	retrieveSelectedGridOrLatest
 }
