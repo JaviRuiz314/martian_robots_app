@@ -17,5 +17,6 @@ app.use(bodyParser.json());
 app.use(routes.Robot);
 app.use(routes.ObjectTracker);
 app.use(routes.MarsTerrain);
+app.use(routes.Command);
 
 module.exports = app;
