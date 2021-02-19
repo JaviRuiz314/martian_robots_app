@@ -1,13 +1,13 @@
 # Martian robots app
-Wellcome to Martian robots app. This app will allow you to explore the Mars surface dividing it into rectangular grids.
+Welcome to Martian robots app. This app will allow you to explore the Mars surface dividing it into rectangular grids.
 
 ## Requeriments
 The app has been developed with a REST API approach in mind so you would need an REST client capable of send both GET and POST requests
-While the development Postman was used for this task, but you can use another one of your preferance. Just take into account that, in order to work, the app only
+At the development, Postman was used for this task, but you can use any other of your preferance. Just take into account that, in order to work, the app only
 accepts JSON objects for the body of the requests, further examples will be provided.
 
-## Basic API behaviour
-To use this app you first need to take in acocunt the three agents of the proccess: 
+## Getting started
+To use this app you first need to take in account the three agents of the proccess: 
 
   1. **Mars grid**: This is the rectangle your robots are going to explore and the first thing you need  to create in order to use the app.
       To do so, you need to launch to the server:
@@ -94,10 +94,14 @@ Martian robots app also expose some others API calls in case you need to retriev
      Allows to retrieve a list of the number of robots that has been lost on a grid and its data. This will include name, last known position and last known command.
      If no Id is given, it will search for the latest grid created.
      
-## Getting started
+## Downloads and hosting
 Ready to start exploring Mars?
 
-The app is fully Dockerize, you can just clone the repository and build the docker image, but the application it is also hosted on Heroku, the url should be:
+The app is fully Dockerize, you can just clone the repository and build the docker image. You only are require of a .env file specificating:
+  1. PORT 
+  2. DATABASE_URL (being a postquesSQL database)
+
+The application it is also hosted on Heroku and ready to use, the url should be:
 
 ```
 https://martian-robots-app.herokuapp.com
