@@ -97,5 +97,54 @@ describe('service robot', () => {
 				});
 			})
 		});
+		describe('retrieveSelectedGridOrLatest', () => {
+			it('it should retrieve the grid with the correct Id', async () => {
+				//GIVEN
+				const
+					gridInfo = { gridId: '1' },
+					resultGrid = { dataValues: 'test grid' };
+				mocks.models.MarsTerrain.findOne.mockResolvedValue(resultGrid);
+				//WHEN
+				const response = await mocks.marsTerrainService.retrieveSelectedGridOrLatest(gridInfo);
+				//THEN
+				expect(mocks.models.MarsTerrain.findOne).toHaveBeenCalledTimes(1);
+				expect(mocks.models.MarsTerrain.findOne).toHaveBeenCalledWith({
+					where: { Id: parseInt(gridInfo.gridId) },
+					order: [['Id', 'DESC']],
+				});
+				expect(response).toEqual(resultGrid.dataValues);
+			});
+			it('it should retrieve the latest grid when no Id is given', async () => {
+				//GIVEN
+				const
+					gridId = undefined,
+					resultGrid = { dataValues: 'test grid' };
+				mocks.models.MarsTerrain.findOne.mockResolvedValue(resultGrid);
+				//WHEN
+				const response = await mocks.marsTerrainService.retrieveSelectedGridOrLatest(gridId);
+				//THEN
+				expect(mocks.models.MarsTerrain.findOne).toHaveBeenCalledTimes(1);
+				expect(mocks.models.MarsTerrain.findOne).toHaveBeenCalledWith({
+					where: '',
+					order: [['Id', 'DESC']],
+				});
+				expect(response).toEqual(resultGrid.dataValues);
+			});
+			it('it should reject an error', async () => {
+				//GIVEN
+				const
+					gridId = undefined,
+					error = new Error('test-error');
+				mocks.models.MarsTerrain.findOne.mockRejectedValue(error);
+				//WHEN
+				await expect(mocks.marsTerrainService.retrieveSelectedGridOrLatest(gridId)).rejects.toThrowError(error);
+				//THEN
+				expect(mocks.models.MarsTerrain.findOne).toHaveBeenCalledTimes(1);
+				expect(mocks.models.MarsTerrain.findOne).toHaveBeenCalledWith({
+					where: '',
+					order: [['Id', 'DESC']],
+				});
+			});
+		});
 	});
 });

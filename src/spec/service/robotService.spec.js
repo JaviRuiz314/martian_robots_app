@@ -24,7 +24,8 @@ describe('service robot', () => {
 					findOne: jest.fn(),
 					findAll: jest.fn(),
 					create: jest.fn(),
-					update: jest.fn()
+					update: jest.fn(),
+					findAndCountAll: jest.fn()
 				},
 				MarsTerrain2Robot: {
 					create: jest.fn()
@@ -248,4 +249,50 @@ describe('service robot', () => {
 			});
 		})
 	});
+	describe('retrieveLostRobotsInformationOnGrid', () => {
+		it('it should retrieve the robots information with the given parameters', async () => {
+			//GIVEN
+			const
+				gridId = 1,
+				robotInfo = {
+					count: 1,
+					rows: ['test']
+				};
+			mocks.models.Robot.findAndCountAll.mockResolvedValue(robotInfo);
+			//WHEN
+			const lostRobots = await mocks.robotService.retrieveLostRobotsInformationOnGrid(gridId);
+			//THEN
+			expect(mocks.models.Robot.findAndCountAll).toHaveBeenCalledTimes(1);
+			expect(mocks.models.Robot.findAndCountAll).toHaveBeenCalledWith({
+				attributes: ['Id', 'Name', 'LostGridPosition', 'LostGridOrientation', 'LastKnownCommand'],
+				include: {
+					model: mocks.models.MarsTerrain2Robot,
+					where: { MarsTerrainId: gridId },
+					required: true
+				},
+				where: { Status: util.LOST_ROBOT_STATUS }
+			});
+			expect(lostRobots).toEqual(robotInfo);
+		});
+		it('it should return an error', async () => {
+			//GIVEN
+			const
+				gridId = 1,
+				error = new Error('test-error');
+				mocks.models.Robot.findAndCountAll.mockRejectedValue(error);
+				//WHEN
+				await expect(mocks.robotService.retrieveLostRobotsInformationOnGrid(gridId)).rejects.toThrowError(error);
+				//THEN
+				expect(mocks.models.Robot.findAndCountAll).toHaveBeenCalledTimes(1);
+				expect(mocks.models.Robot.findAndCountAll).toHaveBeenCalledWith({
+					attributes: ['Id', 'Name', 'LostGridPosition', 'LostGridOrientation', 'LastKnownCommand'],
+					include: {
+						model: mocks.models.MarsTerrain2Robot,
+						where: { MarsTerrainId: gridId },
+						required: true
+					},
+					where: { Status: util.LOST_ROBOT_STATUS }
+				});
+		})
+	})
 })
